@@ -151,13 +151,13 @@
             document.getElementById('result').innerHTML = `
                 <h2>Redundancy Calculation Result</h2>
                 <ul>
-                    <li>Severance Payment: $${severance.toFixed(2).toLocaleString()}</li>
-                    <li>Incentive Payment: $${incentive.toFixed(2).toLocaleString()}</li>
-                    <li>Notice Pay: $${notice_pay.toFixed(2).toLocaleString()}</li>
-                    <li>Recreation Leave Pay: $${recreation_leave_pay.toFixed(2).toLocaleString()}</li>
-                    <li>Long Service Leave Pay: $${long_service_leave_pay.toFixed(2).toLocaleString()}</li>
-                    <li>Superannuation Contribution: $${superannuation.toFixed(2).toLocaleString()}</li>
-                    <li>Total Payout: $${final_payout.toFixed(2).toLocaleString()}</li>
+                    <li>Severance Payment: $${parseFloat(severance).toFixed(2).toLocaleString()}</li>
+                    <li>Incentive Payment: $${parseFloat(incentive).toFixed(2).toLocaleString()}</li>
+                    <li>Notice Pay: $${parseFloat(notice_pay).toFixed(2).toLocaleString()}</li>
+                    <li>Recreation Leave Pay: $${parseFloat(recreation_leave_pay).toFixed(2).toLocaleString()}</li>
+                    <li>Long Service Leave Pay: $${parseFloat(long_service_leave_pay).toFixed(2).toLocaleString()}</li>
+                    <li>Superannuation Contribution: $${parseFloat(superannuation).toFixed(2).toLocaleString()}</li>
+                    <li>Total Payout: $${parseFloat(final_payout).toFixed(2).toLocaleString()}</li>
                 </ul>
             `;
         });
