@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redundancy Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input, select {
+            margin-top: 10px;
+            display: block;
+        }
+        input[type="number"], select {
+            width: 300px;
+            padding: 5px;
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Redundancy Calculator</h1>
+    <form id="calculatorForm">
+        <label for="age">Age:</label>
+        <input type="number" id="age" required>
+
+        <label for="years_of_service">Years of Continuous Service:</label>
+        <input type="number" step="0.1" id="years_of_service" required>
+
+        <label for="base_salary">Base Salary (Annual):</label>
+        <input type="number" id="base_salary" required>
+
+        <label for="employment_type">Employment Type:</label>
+        <select id="employment_type">
+            <option value="full-time">Full-Time</option>
+            <option value="part-time">Part-Time</option>
+            <option value="mixed">Mixed</option>
+        </select>
+
+        <label for="accrued_recreation_leave">Accrued Recreation Leave (weeks):</label>
+        <input type="number" step="0.1" id="accrued_recreation_leave">
+
+        <label for="long_service_leave">Long Service Leave (weeks):</label>
+        <input type="number" step="0.1" id="long_service_leave">
+
+        <label for="part_time_years">Years Worked Part-Time (if mixed):</label>
+        <input type="number" step="0.1" id="part_time_years">
+
+        <label for="part_time_hours">Part-Time Weekly Hours (if applicable):</label>
+        <input type="number" step="0.1" id="part_time_hours">
+
+        <label>Is this a voluntary redundancy?</label>
+        <input type="radio" name="voluntary" value="true" checked> Yes
+        <input type="radio" name="voluntary" value="false"> No
+
+        <input type="submit" value="Calculate">
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const age = parseInt(document.getElementById('age').value);
+            const years_of_service = parseFloat(document.getElementById('years_of_service').value);
+            const base_salary = parseFloat(document.getElementById('base_salary').value);
+            const employment_type = document.getElementById('employment_type').value;
+            const accrued_recreation_leave = parseFloat(document.getElementById('accrued_recreation_leave').value || 0);
+            const long_service_leave = parseFloat(document.getElementById('long_service_leave').value || 0);
+            const part_time_years = parseFloat(document.getElementById('part_time_years').value || 0);
+            const part_time_hours = parseFloat(document.getElementById('part_time_hours').value || 35);
+            const voluntary = document.querySelector('input[name="voluntary"]:checked').value === 'true';
+
+            const superannuation_rate = 0.115;
+            const adjusted_years_of_service = years_of_service;
+
+            function calculate_severance() {
+                const max_weeks = 39;
+                const weeks = Math.min(adjusted_years_of_service * 3, max_weeks);
+                if (employment_type === 'part-time') {
+                    return weeks * (part_time_hours / 35) * (base_salary / 52);
+                } else if (employment_type === 'mixed') {
+                    const full_time_years = adjusted_years_of_service - part_time_years;
+                    const full_time_severance = full_time_years * 3 * (base_salary / 52);
+                    const part_time_severance = part_time_years * 3 * (part_time_hours / 35) * (base_salary / 52);
+                    return Math.min(full_time_severance + part_time_severance, max_weeks * (base_salary / 52));
+                } else {
+                    return weeks * (base_salary / 52);
+                }
+            }
+
+            function calculate_incentive() {
+                if (adjusted_years_of_service < 1) {
+                    return 2 * (base_salary / 52);
+                } else if (adjusted_years_of_service < 2) {
+                    return 4 * (base_salary / 52);
+                } else if (adjusted_years_of_service < 3) {
+                    return 6 * (base_salary / 52);
+                } else {
+                    return 8 * (base_salary / 52);
+                }
+            }
+
+            function calculate_notice_payment() {
+                let notice_weeks = 4;
+                if (age >= 45 && adjusted_years_of_service >= 5) {
+                    notice_weeks += 1;
+                }
+                return notice_weeks * (base_salary / 52);
+            }
+
+            function calculate_leave_payments() {
+                const recreation_leave_pay = accrued_recreation_leave * (base_salary / 52) * 1.175;
+                const long_service_leave_pay = long_service_leave * (base_salary / 52);
+                return [recreation_leave_pay, long_service_leave_pay];
+            }
+
+            const severance = calculate_severance();
+            const incentive = calculate_incentive();
+            const notice_pay = calculate_notice_payment();
+            const [recreation_leave_pay, long_service_leave_pay] = calculate_leave_payments();
+            const total_payment = severance + incentive + notice_pay + recreation_leave_pay + long_service_leave_pay;
+            const superannuation = total_payment * superannuation_rate;
+            const final_payout = total_payment + superannuation;
+
+            document.getElementById('result').innerHTML = `
+                <h2>Redundancy Calculation Result</h2>
+                <ul>
+                    <li>Severance Payment: $${severance.toFixed(2)}</li>
+                    <li>Incentive Payment: $${incentive.toFixed(2)}</li>
+                    <li>Notice Pay: $${notice_pay.toFixed(2)}</li>
+                    <li>Recreation Leave Pay: $${recreation_leave_pay.toFixed(2)}</li>
+                    <li>Long Service Leave Pay: $${long_service_leave_pay.toFixed(2)}</li>
+                    <li>Superannuation Contribution: $${superannuation.toFixed(2)}</li>
+                    <li>Total Payout: $${final_payout.toFixed(2)}</li>
+                </ul>
+            `;
+        });
+    </script>
+
+</body>
+</html>
