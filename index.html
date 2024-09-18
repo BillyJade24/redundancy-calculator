@@ -147,17 +147,26 @@
             const superannuation = total_payment * superannuation_rate;  // Calculate superannuation contribution
             const final_payout = total_payment + superannuation;  // Final payout including superannuation
 
-            // Display the result with formatted numbers (commas for large numbers)
+            // Format numbers with commas for large numbers
+            const formattedSeverance = parseFloat(severance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedIncentive = parseFloat(incentive).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedNoticePay = parseFloat(notice_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedRecreationLeave = parseFloat(recreation_leave_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedLongServiceLeave = parseFloat(long_service_leave_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedSuperannuation = parseFloat(superannuation).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const formattedTotalPayout = parseFloat(final_payout).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            // Display the result with formatted numbers
             document.getElementById('result').innerHTML = `
                 <h2>Redundancy Calculation Result</h2>
                 <ul>
-                    <li>Severance Payment: $${parseFloat(severance).toFixed(2).toLocaleString()}</li>
-                    <li>Incentive Payment: $${parseFloat(incentive).toFixed(2).toLocaleString()}</li>
-                    <li>Notice Pay: $${parseFloat(notice_pay).toFixed(2).toLocaleString()}</li>
-                    <li>Recreation Leave Pay: $${parseFloat(recreation_leave_pay).toFixed(2).toLocaleString()}</li>
-                    <li>Long Service Leave Pay: $${parseFloat(long_service_leave_pay).toFixed(2).toLocaleString()}</li>
-                    <li>Superannuation Contribution: $${parseFloat(superannuation).toFixed(2).toLocaleString()}</li>
-                    <li>Total Payout: $${parseFloat(final_payout).toFixed(2).toLocaleString()}</li>
+                    <li>Severance Payment: $${formattedSeverance}</li>
+                    <li>Incentive Payment: $${formattedIncentive}</li>
+                    <li>Notice Pay: $${formattedNoticePay}</li>
+                    <li>Recreation Leave Pay: $${formattedRecreationLeave}</li>
+                    <li>Long Service Leave Pay: $${formattedLongServiceLeave}</li>
+                    <li>Superannuation Contribution: $${formattedSuperannuation}</li>
+                    <li>Total Payout: $${formattedTotalPayout}</li>
                 </ul>
             `;
         });
