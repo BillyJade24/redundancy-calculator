@@ -147,26 +147,17 @@
             const superannuation = total_payment * superannuation_rate;  // Calculate superannuation contribution
             const final_payout = total_payment + superannuation;  // Final payout including superannuation
 
-            // Format numbers with commas for large numbers
-            const formattedSeverance = parseFloat(severance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedIncentive = parseFloat(incentive).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedNoticePay = parseFloat(notice_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedRecreationLeave = parseFloat(recreation_leave_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedLongServiceLeave = parseFloat(long_service_leave_pay).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedSuperannuation = parseFloat(superannuation).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            const formattedTotalPayout = parseFloat(final_payout).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            // Display the result with formatted numbers
+            // Display the result with formatted numbers (commas for large numbers)
             document.getElementById('result').innerHTML = `
                 <h2>Redundancy Calculation Result</h2>
                 <ul>
-                    <li>Severance Payment: $${formattedSeverance}</li>
-                    <li>Incentive Payment: $${formattedIncentive}</li>
-                    <li>Notice Pay: $${formattedNoticePay}</li>
-                    <li>Recreation Leave Pay: $${formattedRecreationLeave}</li>
-                    <li>Long Service Leave Pay: $${formattedLongServiceLeave}</li>
-                    <li>Superannuation Contribution: $${formattedSuperannuation}</li>
-                    <li>Total Payout: $${formattedTotalPayout}</li>
+                    <li>Severance Payment: $${severance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Incentive Payment: $${incentive.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Notice Pay: $${notice_pay.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Recreation Leave Pay: $${recreation_leave_pay.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Long Service Leave Pay: $${long_service_leave_pay.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Superannuation Contribution: $${superannuation.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>Total Payout: $${final_payout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
                 </ul>
             `;
         });
