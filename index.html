@@ -93,22 +93,34 @@
 
             // Function to calculate severance payment
             function calculate_severance() {
-                const max_weeks = 39;
-                const weeks = Math.min(adjusted_years_of_service * 3, max_weeks);  // Severance maxes at 39 weeks
-                if (employment_type === 'part-time') {
-                    return weeks * (part_time_hours / 35) * (base_salary / 52);
-                } else if (employment_type === 'mixed') {
-                    const full_time_years = adjusted_years_of_service - part_time_years;
-                    const full_time_severance = full_time_years * 3 * (base_salary / 52);
-                    const part_time_severance = part_time_years * 3 * (part_time_hours / 35) * (base_salary / 52);
-                    return Math.min(full_time_severance + part_time_severance, max_weeks * (base_salary / 52));
-                } else {
+                if (voluntary) {
+                    // Voluntary redundancy severance is 3 weeks per year of service, max 39 weeks
+                    const max_weeks = 39;
+                    const weeks = Math.min(adjusted_years_of_service * 3, max_weeks);
                     return weeks * (base_salary / 52);
+                } else {
+                    // Forced redundancy is based on years of service and age
+                    let redundancy_weeks = 0;
+                    if (years_of_service >= 1 && years_of_service < 2) {
+                        redundancy_weeks = age >= 45 ? 5 : 4;
+                    } else if (years_of_service >= 2 && years_of_service < 3) {
+                        redundancy_weeks = age >= 45 ? 8.75 : 7;
+                    } else if (years_of_service >= 3 && years_of_service < 4) {
+                        redundancy_weeks = age >= 45 ? 12.5 : 10;
+                    } else if (years_of_service >= 4 && years_of_service < 5) {
+                        redundancy_weeks = age >= 45 ? 15 : 12;
+                    } else if (years_of_service >= 5 && years_of_service < 6) {
+                        redundancy_weeks = age >= 45 ? 17.5 : 14;
+                    } else if (years_of_service >= 6) {
+                        redundancy_weeks = age >= 45 ? 20 : 16;
+                    }
+                    return redundancy_weeks * (base_salary / 52);
                 }
             }
 
-            // Function to calculate incentive payment
+            // Function to calculate incentive payment (only for voluntary redundancy)
             function calculate_incentive() {
+                if (!voluntary) return 0;  // No incentive payment for forced redundancy
                 if (adjusted_years_of_service < 1) {
                     return 2 * (base_salary / 52);
                 } else if (adjusted_years_of_service < 2) {
